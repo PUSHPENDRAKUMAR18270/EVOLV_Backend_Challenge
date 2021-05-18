@@ -3,12 +3,9 @@ package com.evolv.blogCRUD.controllers;
 import com.evolv.blogCRUD.entities.Blog;
 import com.evolv.blogCRUD.services.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class BlogsController {
@@ -35,37 +32,62 @@ public class BlogsController {
     }
 
     @PostMapping("/blogs")
-    public void addBlog(@RequestBody Blog blog)
+    public Map<String,String> addBlog(@RequestBody Blog blog)
     {
-        blog.setDateOfPublish(new Date());
-        blogService.addBlog(blog);
+        Map<String,String>responseMap=new HashMap<>();
+        try{
+            blog.setDateOfPublish(new Date());
+            blogService.addBlog(blog);
+            responseMap.put("status","OK");
+            responseMap.put("msg","successfully added blog");
+        }
+        catch(Exception e)
+        {
+            responseMap.put("status","Internal server error");
+        }
+        return responseMap;
     }
 
     @PutMapping("/blogs/{blogId}")
-    public ResponseEntity<HttpStatus> updateBlog(@PathVariable String blogId, @ModelAttribute("blog") Blog blog )
+    public Map<String,String> updateBlog(@PathVariable String blogId, @RequestBody Blog blog )
     {
+        Map<String,String>responseMap=new HashMap<>();
         try{
-            blog.setLastUpdated(new Date());
             blogService.updateBlogById(Long.parseLong(blogId),blog);
-            return new ResponseEntity<>(HttpStatus.OK);
+            responseMap.put("status","OK");
+            responseMap.put("msg","successfully updated blog with id "+blogId);
+        }
+        catch(NoSuchElementException e)
+        {
+            responseMap.put("status","Error");
+            responseMap.put("msg","Blog with id "+blogId+" does not exists");
         }
         catch(Exception e)
         {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            responseMap.put("status","Internal Server Error");
+            responseMap.put("msg",e.getMessage());
         }
+        return responseMap;
     }
 
     @DeleteMapping("/blogs/{blogId}")
-    public ResponseEntity<HttpStatus> deleteBlogById(@PathVariable String blogId)
+    public Map<String,String> deleteBlogById(@PathVariable String blogId)
     {
+        Map<String,String> responseMap = new HashMap<>();
         try{
             blogService.deleteBlogById(Long.parseLong(blogId));
-            return new ResponseEntity<>(HttpStatus.OK);
+            responseMap.put("status","OK");
+            responseMap.put("msg","successfully deleted blog with id "+blogId);
+        }
+        catch(NoSuchElementException e)
+        {
+            responseMap.put("status","error");
+            responseMap.put("msg","Blog with id "+blogId+" does not exists");
         }
         catch(Exception e)
         {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            responseMap.put("status","Internal Server Error");
         }
-
+        return responseMap;
     }
 }
