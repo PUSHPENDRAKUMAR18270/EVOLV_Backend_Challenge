@@ -5,10 +5,7 @@ import com.evolv.blogCRUD.entities.Blog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BlogServiceImpl implements BlogService {
@@ -27,46 +24,80 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void addBlog(Blog blog) {
-        blogDao.save(blog);
+    public Map<String,String> addBlog(Blog blog) {
+        Map<String,String> responseMap = new HashMap<>();
+        blog.setDateOfPublish(new Date());
+        try{
+            blogDao.save(blog);
+            responseMap.put("status","OK");
+            responseMap.put("msg","successfully added blog");
+        }
+        catch(Exception e)
+        {
+            responseMap.put("status","Internal server error");
+        }
+        return responseMap;
     }
 
     @Override
-    public void deleteBlogById(long blogId) throws NoSuchElementException{
-        if(blogDao.existsById(blogId)) {
-            blogDao.deleteById(blogId);
+    public Map<String,String> deleteBlogById(long blogId){
+        Map<String,String> responseMap=new HashMap<>();
+        try{
+
+            if(blogDao.existsById(blogId)) {
+                blogDao.deleteById(blogId);
+                responseMap.put("status","OK");
+                responseMap.put("msg","successfully deleted blog with id "+blogId);
+            }
+            else{
+                responseMap.put("status","error");
+                responseMap.put("msg","Blog with id "+blogId+" does not exists");
+            }
         }
-        else{
-            throw new NoSuchElementException();
+        catch(Exception e)
+        {
+            responseMap.put("status","Internal Server Error");
         }
+        return responseMap;
     }
 
     @Override
-    public void updateBlogById(long blogId,Blog blog) throws NoSuchElementException {
-        if(blogDao.existsById(blogId)) {
-            Blog b = blogDao.getOne(blogId);
-            b.setLastUpdated(new Date());
-            if(blog.getContent()!=null)
-            {
-                b.setContent(blog.getContent());
-            }
+    public Map<String,String> updateBlogById(long blogId,Blog blog) throws NoSuchElementException {
+        Map<String,String>responseMap=new HashMap<>();
+        try{
+            if(blogDao.existsById(blogId)) {
+                Blog b = blogDao.getOne(blogId);
+                b.setLastUpdated(new Date());
+                if(blog.getContent()!=null)
+                {
+                    b.setContent(blog.getContent());
+                }
 
-            if(blog.getTitle()!=null)
-            {
-                b.setTitle(blog.getTitle());
+                if(blog.getTitle()!=null)
+                {
+                    b.setTitle(blog.getTitle());
+                }
+                if(blog.getSummary()!=null)
+                {
+                    b.setSummary(blog.getSummary());
+                }
+                if(blog.getSlug()!=null)
+                {
+                    b.setSlug(blog.getSlug());
+                }
+                blogDao.save(b);
+                responseMap.put("status","OK");
+                responseMap.put("msg","successfully updated blog with id "+blogId);
             }
-            if(blog.getSummary()!=null)
-            {
-                b.setSummary(blog.getSummary());
+            else{
+                responseMap.put("status","Error");
+                responseMap.put("msg","Blog with id "+blogId+" does not exists");
             }
-            if(blog.getSlug()!=null)
-            {
-                b.setSlug(blog.getSlug());
-            }
-            blogDao.save(b);
         }
-        else{
-            throw new NoSuchElementException();
+        catch(Exception e)
+        {
+            responseMap.put("status","Internal Server Error");
         }
+        return responseMap;
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Blog {
@@ -36,6 +37,9 @@ public class Blog {
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
     private Date lastUpdated;
+
+    @OneToMany
+    private List<Comment> comments;
 
     @Lob
     private String summary;
