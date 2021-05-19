@@ -81,10 +81,7 @@ public class BlogServiceImpl implements BlogService {
                 {
                     b.setSummary(blog.getSummary());
                 }
-                if(blog.getSlug()!=null)
-                {
-                    b.setSlug(blog.getSlug());
-                }
+
                 blogDao.save(b);
                 responseMap.put("status","OK");
                 responseMap.put("msg","successfully updated blog with id "+blogId);

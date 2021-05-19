@@ -24,12 +24,11 @@ public class Blog {
     * dateOfPublish: It stores the date and time at which the post is created.
     * lastUpdated: 	 It stores the date and time at which the post is updated.
     * summary:       The summary of the post to mention the key highlights
-    * slug:          The post slug to form the URL.
     * */
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long blogId;
 
-    @Column(nullable = false,unique=true)
+    @Column(nullable = false)
     private String title;
 
     @Lob @Column(nullable = false)
@@ -60,8 +59,6 @@ public class Blog {
 
     @Lob
     private String summary;
-
-    private String slug;
 
     public long getBlogId() {
         return blogId;
@@ -109,14 +106,6 @@ public class Blog {
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
     }
 
 
