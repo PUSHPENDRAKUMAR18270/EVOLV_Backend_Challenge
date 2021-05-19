@@ -1,26 +1,22 @@
 package com.evolv.blogCRUD.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
 
-
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
-//@Table(indexes =
-//    {
-//            @Index(name = "blog_id_index", columnList = "blogId"),
-//            @Index(name = "comment_id_index", columnList = "commentId")
-//    }
-//)
+@Table(name="comments")
 public class Comment {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long commentId;
-
-    //foreign key reference and index create
-    @ManyToOne
-    private Blog blog;
 
     private long parentCommentId;
 
@@ -28,22 +24,11 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
-    @Column(name = "dateOfPublish",columnDefinition="DATETIME")
+    @Column(columnDefinition="DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm", timezone = "Asia/Kolkata")
     private Date createdAt;
 
-    public Comment(long commentId, long parentCommentId, String content, Date createdAt) {
-        this.commentId = commentId;
-        this.parentCommentId = parentCommentId;
-        this.content = content;
-        this.createdAt = createdAt;
-    }
-
-    public Comment()
-    {
-
-    }
 
     public long getCommentId() {
         return commentId;

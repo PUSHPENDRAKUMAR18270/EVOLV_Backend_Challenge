@@ -1,12 +1,19 @@
 package com.evolv.blogCRUD.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity
+@Table(name = "blogs")
 public class Blog {
 
     /*
@@ -28,37 +35,33 @@ public class Blog {
     @Lob @Column(nullable = false)
     private String content;
 
-    @Column(name = "dateOfPublish",columnDefinition="DATETIME")
+    @Column(columnDefinition="DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
     private Date dateOfPublish;
 
-    @Column(name = "lastUpdated",columnDefinition="DATETIME")
+    @Column(columnDefinition="DATETIME")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "Asia/Kolkata")
     private Date lastUpdated;
 
-    @OneToMany
-    private List<Comment> comments;
+    //foreign key reference
+    @OneToMany(targetEntity = Comment.class,cascade = CascadeType.ALL)
+    @JoinColumn(name = "blog_id",referencedColumnName = "blogId")
+    private List<Comment>comments;
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     @Lob
     private String summary;
 
     private String slug;
-
-    public Blog(long blogId,String title, String content, Date dateOfPublish, Date lastUpdated, String summary, String slug) {
-        this.blogId=blogId;
-        this.title = title;
-        this.content = content;
-        this.dateOfPublish = dateOfPublish;
-        this.lastUpdated = lastUpdated;
-        this.summary = summary;
-        this.slug = slug;
-    }
-
-    public Blog() {
-
-    }
 
     public long getBlogId() {
         return blogId;
@@ -116,16 +119,5 @@ public class Blog {
         this.slug = slug;
     }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "postId=" + blogId +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", dateOfPublish=" + dateOfPublish +
-                ", lastUpdated=" + lastUpdated +
-                ", summary='" + summary + '\'' +
-                ", slug='" + slug + '\'' +
-                '}';
-    }
+
 }

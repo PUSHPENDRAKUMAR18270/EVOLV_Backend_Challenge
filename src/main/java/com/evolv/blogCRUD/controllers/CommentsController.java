@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CommentsController {
@@ -14,15 +15,15 @@ public class CommentsController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping("/comments/all/{blogId}")
+    @GetMapping("/blogs/{blogId}/comment")
     public List<Comment> getAllCommentsOnPost(@PathVariable String blogId)
     {
         return commentService.getAllCommentsOnBlog(Long.parseLong(blogId));
     }
 
-    @PostMapping("/comments}")
-    public void postComment(@RequestBody Comment comment)
+    @PostMapping("/blogs/{blogId}/comment")
+    public Map<String,String> addComment(@PathVariable String blogId,@RequestBody Comment comment)
     {
-        commentService.addCommentOnBlog(comment);
+        return commentService.addComment(Long.parseLong(blogId),comment);
     }
 }
