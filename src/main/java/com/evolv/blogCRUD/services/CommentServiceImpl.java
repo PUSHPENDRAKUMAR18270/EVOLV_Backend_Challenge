@@ -25,7 +25,7 @@ public class CommentServiceImpl implements CommentService{
     public List<Comment> getAllCommentsOnBlog(long blogId) {
         if(blogDao.existsById(blogId))
         {
-            return blogDao.getOne(blogId).getComments();
+            return blogDao.findById(blogId).get().getComments();
         }
         return null;
     }
@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService{
         try{
             if(blogDao.existsById(blogId))
             {
-                Blog b=blogDao.getOne(blogId);
+                Blog b=blogDao.findById(blogId).get();
                 b.getComments().add(comment);
                 blogDao.save(b);
                 responseMap.put("status","Ok");

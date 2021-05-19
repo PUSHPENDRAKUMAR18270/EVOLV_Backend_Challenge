@@ -15,7 +15,11 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Blog getBlogById(long blogId) {
-        return blogDao.getOne(blogId);
+        if(blogDao.existsById(blogId))
+        {
+            return blogDao.findById(blogId).get();
+        }
+        return null;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class BlogServiceImpl implements BlogService {
         Map<String,String>responseMap=new HashMap<>();
         try{
             if(blogDao.existsById(blogId)) {
-                Blog b = blogDao.getOne(blogId);
+                Blog b = blogDao.findById(blogId).get();
                 b.setLastUpdated(new Date());
                 if(blog.getContent()!=null)
                 {

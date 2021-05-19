@@ -13,8 +13,19 @@
        <summary>Details</summary>
        <p>
             <b>Action</b><br/>
-            fetches all the blogs from database
+            fetches all the blogs
        </p>
+  </details>
+- GET &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /blogs/{blogId}
+    <details>
+         <summary>Details</summary>
+         <p>
+    <b>PathVariable</b><br/> 
+            blogId -> Id of the blog to be fetched.
+            <br/>
+          <b>Action</b><br/>
+          fetch a blog with id blogId
+     </p>
   </details>
 - POST &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /blogs
   <details>
