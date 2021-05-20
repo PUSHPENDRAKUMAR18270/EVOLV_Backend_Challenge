@@ -86,7 +86,7 @@
             fetches all the comments of the blog with id blogId
        </p>
     </details>
-- POST &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/blogs/{blogId}
+- POST &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/blogs/{blogId}/comment
     <details>
        <summary>Details</summary>
         <p>
